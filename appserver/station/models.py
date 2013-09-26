@@ -3,10 +3,11 @@ from django.db import models
 class Station(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
+    altitude = models.FloatField()
     mesonet_id = models.CharField(max_length=25)
     name = models.CharField(max_length=50)
 
-class Weather(models.Model):
+class Observation(models.Model):
     station = models.ForeignKey(Station)
     timestamp = models.DateTimeField('timestamp')
     temperature = models.FloatField()
@@ -14,7 +15,6 @@ class Weather(models.Model):
     direction = models.FloatField()
     gust = models.FloatField()
     pmsl = models.FloatField()
-    altitude = models.FloatField()
     dewpoint = models.FloatField()
     relhumidity = models.FloatField()
     weather = models.FloatField()
