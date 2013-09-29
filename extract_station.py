@@ -12,7 +12,7 @@ class ExtractData:
                 # don't go into any .git directories.
                 dirnames.remove('.git')
             for filename in filenames:
-                start = time.clock()
+                start = time.time()
                 with open(os.path.join(dirname, filename), 'r') as csvfile:
                     reader = csv.reader(csvfile)
                     for line in reader:
@@ -39,12 +39,15 @@ class ExtractData:
                             except psycopg2.IntegrityError:
                                 print "Integrity Exception for " + primary_id
                                 conn.rollback()
+                            except psycopg2.DataError:
+                                print "Data Error! Something was null " + primary_id
+                                conn.rollback()
                             else:
                                 conn.commit()
                             cur.close()
                         else:
                             pass
-                print "Time taken to process "+filename+":"+str(time.clock() - start)
+                print "Time taken to process "+filename+" : "+str(time.time() - start) + "secs"
                 break
     def __init__(self):
         self.data = []
