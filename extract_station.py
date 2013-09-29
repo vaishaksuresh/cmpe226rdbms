@@ -1,18 +1,22 @@
 import sys
 import csv
 import os
+import psycopg2
+import time
 
 
 class ExtractData:
-    def loadfromfile():
+    def load_stations_to_db():
         for dirname, dirnames, filenames in os.walk('./tbl'):
             if '.git' in dirnames:
                 # don't go into any .git directories.
                 dirnames.remove('.git')
             for filename in filenames:
+                start = time.clock()
                 with open(os.path.join(dirname, filename), 'r') as csvfile:
                     reader = csv.reader(csvfile)
                     for line in reader:
+
                         if line[0] != 'primary id':
                             primary_id = line[0]
                             secondary_id = line[1]
@@ -22,14 +26,27 @@ class ExtractData:
                             elevation = line[7]
                             mesonet_id = line[8]
                             mesonet_name = line[9]
-                            q = "insert into station_station (station_id,station_name,latitude, longitude,elevation,mesonet_id) values " \
+                            station_name = station_name.replace("'", r"\\'")
+
+                            '''q = "insert into station_station (station_id,station_name,latitude,longitude,elevation,mesonet_id) values " \
                                 "('"+primary_id+"','"+station_name+"','"+latitude+"','"+longitude+"','"+elevation+"','"+mesonet_id+"')"
                             with open ('station_inserts.sql', 'a') as f:
-                                f.write(q+'\n')
+                                f.write(q+'\n')'''
+                            try:
+                                conn = psycopg2.connect("host='localhost' dbname=weather user=postgres")
+                                cur = conn.cursor()
+                                cur.execute("insert into station_station (station_id,station_name,latitude,longitude,elevation,mesonet_id) values (%s,%s,%s,%s,%s,%s)",(primary_id,station_name,latitude,longitude,elevation,mesonet_id))
+                            except psycopg2.IntegrityError:
+                                print "Integrity Exception for " + primary_id
+                                conn.rollback()
+                            else:
+                                conn.commit()
+                            cur.close()
                         else:
                             pass
-
+                print "Time taken to process "+filename+":"+str(time.clock() - start)
+                break
     def __init__(self):
         self.data = []
     if __name__ == '__main__':
-        loadfromfile()
+        load_stations_to_db()
