@@ -35,7 +35,9 @@ class ExtractData:
                             try:
                                 conn = psycopg2.connect("host='localhost' dbname=weather user=postgres")
                                 cur = conn.cursor()
-                                cur.execute("insert into station_station (station_id,station_name,latitude,longitude,elevation,mesonet_id) values (%s,%s,%s,%s,%s,%s)",(primary_id,station_name,latitude,longitude,elevation,mesonet_id))
+                                cur.execute("insert into station_station (station_id,station_name,latitude,"
+                                            "longitude,elevation,mesonet_id) values (%s,%s,%s,%s,%s,%s"
+                                            ")",(primary_id , station_name , latitude , longitude , elevation , mesonet_id))
                             except psycopg2.IntegrityError:
                                 print "Integrity Exception for " + primary_id
                                 conn.rollback()
