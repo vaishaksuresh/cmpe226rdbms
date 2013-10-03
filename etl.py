@@ -40,6 +40,13 @@ class ExtractData:
                             relhumidity = str(line[0]).split()[13]
                             weather = str(line[0]).split()[14]
                             p241 = str(line[0]).split()[15]
+
+                            tup = station, str(Timestamp(year,month,day,hour,minute)), mnet, latitude, longitude, \
+                                  elevation, temperature, sknt, direction, gust, pmsl, altitude, dewpoint, \
+                                  relhumidity,weather, p241
+                            with open('queries.sql', 'a') as f:
+                                f.write(",".join(tup)+"\n")
+
                             '''q = "insert into station_station (latitude, longitude, altitude,mesonet_id) values ('"+latitude+"','"+longitude+"','"+elevation+"','"+mnet+"','"+station+"')"
                             with open ('queries.sql', 'a') as f: f.write (q+'\n')'''
                             try:
