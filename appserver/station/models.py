@@ -1,15 +1,19 @@
 from django.db import models
 
 class Station(models.Model):
+    mesonet_id = models.CharField(max_length=250, primary_key=True)
+    name = models.CharField(max_length=250)
+
+class Location(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    altitude = models.FloatField()
-    mesonet_id = models.CharField(max_length=25)
-    name = models.CharField(max_length=50)
+    elevation = models.FloatField()
+    mesonet_station = models.ForeignKey(Station)
 
 class Observation(models.Model):
-    station = models.ForeignKey(Station)
+    mesonet_id = models.CharField(max_length=25)
     timestamp = models.DateTimeField('timestamp')
+    location = models.ForeignKey(Location)
     temperature = models.FloatField()
     sknt = models.FloatField()
     direction = models.FloatField()
@@ -19,4 +23,5 @@ class Observation(models.Model):
     relhumidity = models.FloatField()
     weather = models.FloatField()
     p24 = models.FloatField()
-
+    class Meta:
+        unique_together = ("mesonet_id", "timestamp")
