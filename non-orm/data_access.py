@@ -146,7 +146,7 @@ class Observation(object):
                     if len(locations_to_insert) > 0:
                         Location.insert_location_info(locations_to_insert)
 
-        Observation.insert_observation_info(observation_list)
+        #Observation.insert_observation_info(observation_list)
         Observation.insert_observation_info_bulk(observation_list)
 
     @staticmethod

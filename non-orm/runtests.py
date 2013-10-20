@@ -15,6 +15,6 @@ class RunTests(object):
         self.arg = arg
 
 #Station.glean_station_information()
-Location.glean_location_information()
-#Observation.glean_observation_information()
+#Location.glean_location_information()
+Observation.glean_observation_information()
 
